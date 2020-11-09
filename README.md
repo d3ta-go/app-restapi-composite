@@ -1,2 +1,3 @@
-# project-template
-DDD Project Template in Go
+# app-restapi-composite
+
+Interface: RESTAPI Composite Application Interface

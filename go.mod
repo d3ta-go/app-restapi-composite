@@ -1,4 +1,4 @@
-module github.com/d3ta-go/project-template
+module github.com/d3ta-go/app-restapi-composite
 
 go 1.15
 
