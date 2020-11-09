@@ -1,0 +1,980 @@
+openapi: "3.0.3"
+
+info:
+  title: '{{index . "info.Title"}}'
+  description: '{{index . "info.Description"}}'
+  contact:
+    name: '{{index . "info.Contact.Name"}}'
+    url: '{{index . "info.Contact.URL"}}'
+    email: '{{index . "info.Contact.Email"}}'
+  license:
+    name: '{{index . "info.License.Name"}}'
+    url: '{{index . "info.License.URL"}}'
+  version: '{{index . "info.Version"}}'
+
+servers:
+  - url: '{scheme}://{host}'
+    description: Server
+    variables:
+      scheme:
+        description: The API is accessible via https and http
+        enum:
+          - https
+          - http
+        default: http
+      host:
+        default: '{{index . "server.URL.Host.Default"}}'
+
+tags:
+  - name: Systems
+    description: >-
+      [Generic (sub)Domain] Systems
+  - name: Auths
+    description: >-
+      [Generic (sub)Domain] Authentication (using DDD layered architecture, [G]ORM)
+  - name: GeoLocation
+    description: >-
+      [Supporting (sub)Domain] Geo Location Data (using Simple CRUD with [G]ORM, ElasticSearch)
+  - name: Email
+    description: >-
+      [Generic (sub)Domain] Email (using DDD layered architecture, [G]ORM, smtp)
+  - name: Covid19
+    description: >-
+      [Core (sub)Domain] Covid19 (using DDD layered architecture, adapter-connector, Redis)
+  
+security:
+  - bearerAuth: []
+
+paths:
+  # System
+  /system/health:
+    get:
+      tags:
+        - Systems
+      security: []
+      operationId: Systems.CheckHealth
+      summary: System Health Check
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  /system/captcha/generate:
+    get:
+      tags:
+        - Systems
+      security: []
+      operationId: Systems.Captcha.Generate
+      summary: System Generate Captcha
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  /system/captcha/image/{captchaID}:
+    get:
+      tags:
+        - Systems
+      security: []
+      operationId: Systems.Captcha.GenerateImage
+      summary: System Generate Captcha Image
+      parameters:
+        - $ref: '#/components/parameters/system.param.captchaID'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+        
+  # Auths
+  /api/v1/auths/register:
+    post:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.Register
+      summary: User Registration
+      requestBody:
+        $ref: '#/components/requestBodies/auths.Register.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/auths/registration/activate/{activationCode}/{format}:
+    get:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.ActivateRegistration
+      summary: Activate Registration
+      parameters:
+        - $ref: '#/components/parameters/auths.param.regActivationCode'
+        - $ref: '#/components/parameters/auths.param.reqActivationFormat'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/auths/login:
+    post:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.Login
+      summary: User Login (local user)
+      requestBody:
+        $ref: '#/components/requestBodies/auths.Login.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/auths/login-app:
+    post:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.LoginApp
+      summary: Client Login App (local user)
+      requestBody:
+        $ref: '#/components/requestBodies/auths.LoginApp.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  # GeoLocation
+  /api/v1/geolocation/countries/list-all:
+    get:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.ListALl
+      summary: Display Country List
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/geolocation/countries/indexer/refresh:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.RefreshIndexer
+      summary: Refresh Country Indexer [ElasticSearch]
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.RefreshIndexer.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/geolocation/countries/indexer/search:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.SearchIndexer
+      summary: Search Country Indexer [ElasticSearch]
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.SearchIndexer.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/geolocation/country:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Add
+      summary: Add Country
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.Add.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/geolocation/country/{code}:
+    get:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.GetDetail
+      summary: Get Detail Country
+      parameters:
+        - $ref: '#/components/parameters/geoLocation.param.countryCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+    put:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Update
+      summary: Update Country
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.Update.Request'
+      parameters:
+        - $ref: '#/components/parameters/geoLocation.param.countryCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+    delete:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Delete
+      summary: Delete Country
+      parameters:
+        - $ref: '#/components/parameters/geoLocation.param.countryCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  # Email
+  /api/v1/email/send:
+    post:
+      tags:
+        - Email
+      operationId: email.Send
+      summary: Send Email using template
+      requestBody:
+        $ref: '#/components/requestBodies/email.Send.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/email/templates/list-all:
+    get:
+      tags:
+        - Email
+      operationId: email.Template.ListAll
+      summary: List All Email Template
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template:
+    post:
+      tags:
+        - Email
+      operationId: email.Template.Create
+      summary: Create new Email Template
+      requestBody:
+        $ref: '#/components/requestBodies/email.Template.Create.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template/{code}:
+    get:
+      tags:
+        - Email
+      operationId: email.Template.FindByCode
+      summary: Find Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+    delete:
+      tags:
+        - Email
+      operationId: email.Template.Delete
+      summary: Delete Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template/update/{code}:
+    put:
+      tags:
+        - Email
+      operationId: email.Template.Update
+      summary: Update Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      requestBody:
+        $ref: '#/components/requestBodies/email.Template.Update.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template/set-active/{code}:
+    put:
+      tags:
+        - Email
+      operationId: email.Template.SetActive
+      summary: Set Active Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      requestBody:
+        $ref: '#/components/requestBodies/email.Template.SetActive.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  # Covid19
+  /api/v1/covid19/current/by-country:
+    post:
+      tags:
+        - Covid19
+      operationId: covid19.Current.ByCountry
+      summary: Display Current Data By Country
+      requestBody:
+        $ref: '#/components/requestBodies/covid19.Current.ByCountry.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+components:
+  #SecuritySchemes
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  # Parameters
+  parameters:
+    # System
+    system.param.captchaID:
+      in: path
+      name: captchaID
+      description: >-
+        captchaID (with extension: `.png`)
+      schema:
+        type: string
+      required: true
+      example: mv14bg7coWkbp9JtnQCb.png
+    
+    # Auths
+    auths.param.regActivationCode:
+      in: path
+      name: activationCode
+      description: >-
+        Activation Code (from register process)
+      schema:
+        type: string
+      required: true
+      example: "adhad-adlkajdandad-aldkjadjal-adkad"
+    
+    auths.param.reqActivationFormat:
+      in: path
+      name: format
+      description: >-
+        Dispay Format
+      schema:
+        type: string
+        enum:
+          - json
+          - html
+        default: json
+      required: true
+
+    # GeoLocation
+    geoLocation.param.countryCode:
+      in: path
+      name: code
+      description: >-
+        Country Code (example: ID)
+      schema:
+        type: string
+      required: true
+      example: ID
+    
+    # Emails
+    email.param.emailTemplateCode:
+      in: path
+      name: code
+      description: >-
+        Email Template Code
+      schema:
+        type: string
+      required: true
+      example: activate-registration
+
+  # Request Bodies
+  requestBodies:
+    # Auths
+    auths.Register.Request:
+      description: User Registration 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/auths.Register.Request'
+          examples:
+            Registration:
+              value:
+                username: "admin.d3tago"
+                password: "P4s$W0rd!@!"
+                email: "user.d3tago@email.tld"
+                nickName: "Hari"
+                captcha: "get-captcha/Value"
+                captchaID: "get-geptcha/ID"
+    
+    auths.Login.Request:
+      description: User Login 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/auths.Login.Request'
+          examples:
+            Registration:
+              value:
+                username: "admin.d3tago"
+                password: "P4s$W0rd!@!"
+                captcha: "get-captcha/Value"
+                captchaID: "get-geptcha/ID"
+    
+    auths.LoginApp.Request:
+      description: Client Login App 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/auths.LoginApp.Request'
+          examples:
+            Registration:
+              value:
+                clientKey: "clientKey"
+                secretKey: "secretkey"
+  
+    # GeoLocation
+    geoLocation.Country.Add.Request:
+      description: Add Geolocation Country
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.Add.Request'
+          examples:
+            Detail:
+              value:
+                code: ID
+                name: INDONESIA
+                ISO2Code: ID
+                ISO3Code: IDN
+                WHORegion: SEARO
+            Simple:
+              value:
+                code: ID
+                name: INDONESIA
+                ISO2Code: ID
+                ISO3Code: 
+                WHORegion: SEARO
+    
+    geoLocation.Country.RefreshIndexer.Request:
+      description: Refresh Geolocation Country Indexer
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.RefreshIndexer.Request'
+          examples:
+            Sync:
+              value:
+                processType: SYNC
+            Async:
+              value:
+                processType: ASYNC
+    
+    geoLocation.Country.SearchIndexer.Request:
+      description: Search Geolocation Country Indexer
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.SearchIndexer.Request'
+          examples:
+            Min2Char:
+              value:
+                name: IN
+            More2Char:
+              value:
+                name: IND
+    
+    geoLocation.Country.Update.Request:
+      description: Update Geolocation Country
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.Update.Request'
+          examples:
+            Detail:
+              value:
+                name: INDONESIA UPDATED
+                ISO2Code: ID
+                ISO3Code: IDN
+                WHORegion: SEARO
+            Simple:
+              value:
+                name: INDONESIA UPDATED
+                ISO2Code: ID
+                ISO3Code: 
+                WHORegion: SEARO
+    
+    # Email
+    email.Template.Create.Request:
+      description: Create Email Template Request
+      required: true
+      content:
+        application/json:
+          schema:
+             $ref: '#/components/schemas/email.Template.Create.Request'
+          examples:
+            PlainTextSample:
+              value:
+                code: "plain-email-template-code"
+                name: "Plain Text Email Template Name"
+                isActive: true
+                emailFormat: "TEXT"
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/plain-text-template.json"
+            HTMLSample:
+              value:
+                code: "html-email-template-code"
+                name: "HTML Email Template Name"
+                isActive: true
+                emailFormat: "HTML"
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/html-template.json"
+    
+    email.Template.Update.Request:
+      description: Update Email Template Request
+      required: true
+      content:
+        application/json:
+          schema:
+             $ref: '#/components/schemas/email.Template.Update.Request'
+          examples:
+            PlainTextSample:
+              value:
+                name: "Plain Text Email Template Name"
+                isActive: true
+                emailFormat: "TEXT"
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/plain-text-template.json"
+            HTMLSample:
+              value:
+                name: "HTML Email Template Name"
+                isActive: true
+                emailFormat: "HTML"
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/html-template.json"
+    
+    email.Template.SetActive.Request:
+      description: Set Active Email Template Request
+      required: true
+      content:
+        application/json:
+          schema:
+             $ref: '#/components/schemas/email.Template.SetActive.Request'
+          examples:
+            Activate:
+              value:
+                isActive: true
+            InActivate:
+              value:
+                isActive: false
+
+    email.Send.Request:
+      description: Send Email
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/email.Send.Request'
+          examples:
+            Simple:
+              value:
+                templateCode: activate-registration-html
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3ta.to@domain.tld
+                  name: D3TA Golang To
+                templateData:
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
+                processingType: SYNC
+            WithCC:
+              value:
+                templateCode: activate-registration-html
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3tago.to@domain.tld
+                  name: D3TA Golang To
+                cc:
+                  - email: d3tago.cc1@domain.tld
+                    name: D3TA Golang CC 1
+                  - email: d3tago.cc2@gmail.tld
+                    name: D3TA Golang CC 2
+                templateData:
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
+                processingType: SYNC
+            WithBCC:
+              value:
+                templateCode: activate-registration-html
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3tago.to@domain.tld
+                  name: D3TA Golang To
+                bcc:
+                  - email: d3tago.bcc1@domain.tld
+                    name: D3TA Golang BCC 1
+                  - email: d3tago.bcc2@gmail.tld
+                    name: D3TA Golang BCC 2
+                templateData:
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
+                processingType: ASYNC
+            WithCCAndBCC:
+              value:
+                templateCode: activate-registration-html
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3tago.to@domain.tld
+                  name: D3TA Golang To
+                cc:
+                  - email: d3tago.cc1@domain.tld
+                    name: D3TA Golang CC 1
+                  - email: d3tago.cc2@gmail.tld
+                    name: D3TA Golang CC 2
+                bcc:
+                  - email: d3tago.bcc1@domain.tld
+                    name: D3TA Golang BCC 1
+                  - email: d3tago.bcc2@gmail.tld
+                    name: D3TA Golang BCC 2
+                templateData:
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
+                processingType: ASYNC
+
+    # Covid19  
+    covid19.Current.ByCountry.Request:
+      description: Display Covid19 Current Data By Country Requst 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/covid19.Current.ByCountry.Request'
+          examples:
+            WHO.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: WHO
+            Covid19GoId.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: COVID19GOID
+            WHOAndCovid19GoId.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: WHO
+                  - code: COVID19GOID
+            ALL.Default:
+              value:
+                countryCode: ID
+                providers:
+                  - code: _DEFAULT_
+            ALL.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: _ALL_
+
+  responses:
+    GeneralResponse:
+      description: General Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralResponse'
+
+  # Schemas
+  schemas:
+    GeneralResponse:
+      required:
+        - status
+        - response
+        - serverInfo
+      properties:
+        status:
+          type: string
+          enum:
+            - OK
+            - ERROR
+          example: OK
+        response:
+          type: object
+        serverInfo:
+          type: object
+
+    # Auths
+    auths.Register.Request:
+      type: object
+      properties:
+        username:
+          $ref: '#/components/schemas/auths.field.username'
+        password:
+          $ref: '#/components/schemas/auths.field.password'
+        email:
+          $ref: '#/components/schemas/auths.field.email'
+        nickName:
+          $ref: '#/components/schemas/auths.field.nickName'
+        captcha:
+          $ref: '#/components/schemas/auths.field.captcha'
+        captchaID:
+          $ref: '#/components/schemas/auths.field.captchaID'
+
+    auths.Login.Request:
+      type: object
+      properties:
+        username:
+          $ref: '#/components/schemas/auths.field.username'
+        password:
+          $ref: '#/components/schemas/auths.field.password'
+        captcha:
+          $ref: '#/components/schemas/auths.field.captcha'
+        captchaID:
+          $ref: '#/components/schemas/auths.field.captchaID'
+    
+    auths.LoginApp.Request:
+      type: object
+      properties:
+        clientKey:
+          $ref: '#/components/schemas/auths.field.clientKey'
+        secretKey:
+          $ref: '#/components/schemas/auths.field.secretKey'
+    
+    auths.field.username:
+      type: string
+      example: "user.d3tago"
+    auths.field.password:
+      type: string
+      example: "P4s$W0rd!@!"
+    auths.field.email:
+      type: string
+      format: email
+      example: "user.d3tago@email.tld"
+    auths.field.nickName:
+      type: string
+      example: "Hari"
+    
+    auths.field.captcha:
+      type: string
+      example: 1234
+    auths.field.captchaID:
+      type: string
+      example: "adao293aoadh39uekha"
+
+    auths.field.clientKey:
+      type: string
+      example: "clientKey"
+    auths.field.secretKey:
+      type: string
+      example: "clientKey"
+
+    # GeoLocation
+    geoLocation.Country.Add.Request:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/geoLocation.field.country.code'
+        name:
+          $ref: '#/components/schemas/geoLocation.field.country.name'
+        ISO2Code:
+          $ref: '#/components/schemas/geoLocation.field.country.ISO2Code'
+        ISO3Code:
+          $ref: '#/components/schemas/geoLocation.field.country.ISO3Code'
+        WHORegion:
+          $ref: '#/components/schemas/geoLocation.field.country.WHORegion'
+    
+    geoLocation.Country.RefreshIndexer.Request:
+      type: object
+      properties:
+        processType:
+          $ref: '#/components/schemas/geoLocation.indexer.field.processingType'
+
+    geoLocation.Country.SearchIndexer.Request:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/geoLocation.field.country.name'
+
+    geoLocation.indexer.field.processingType:
+      type: string
+      example: SYNC
+      enum:
+        - SYNC
+        - ASYNC
+
+    geoLocation.Country.Update.Request:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/geoLocation.field.country.name'
+        ISO2Code:
+          $ref: '#/components/schemas/geoLocation.field.country.ISO2Code'
+        ISO3Code:
+          $ref: '#/components/schemas/geoLocation.field.country.ISO3Code'
+        WHORegion:
+          $ref: '#/components/schemas/geoLocation.field.country.WHORegion'
+    
+    geoLocation.field.country.code:
+      type: string
+      example: ID
+    geoLocation.field.country.name:
+      type: string
+      example: INDONESIA
+    geoLocation.field.country.ISO2Code:
+      type: string
+      example: ID
+    geoLocation.field.country.ISO3Code:
+      type: string
+      example: IDN
+    geoLocation.field.country.WHORegion:
+      type: string
+      example: SEARO
+    
+    # Email
+    email.Template.Create.Request:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/email.Template.field.code'
+        name:
+          $ref: '#/components/schemas/email.Template.field.name'
+        isActive:
+          $ref: '#/components/schemas/email.Template.field.isActive'
+        emailFormat:
+          $ref: '#/components/schemas/email.Template.field.emailFormat'
+        template:
+          $ref: '#/components/schemas/email.Template.obj.template'
+
+    email.Template.Update.Request:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/email.Template.field.name'
+        isActive:
+          $ref: '#/components/schemas/email.Template.field.isActive'
+        emailFormat:
+          $ref: '#/components/schemas/email.Template.field.emailFormat'
+        template:
+          $ref: '#/components/schemas/email.Template.obj.template'
+
+    email.Template.SetActive.Request:
+      type: object
+      properties:
+        isActive:
+          $ref: '#/components/schemas/email.Template.field.isActive'
+    
+    email.Template.field.code:
+      type: string
+      example: email-template-code
+    email.Template.field.name:
+      type: string
+      example: Email Template
+    email.Template.field.isActive:
+      type: boolean
+      example: true
+    email.Template.field.emailFormat:
+      type: string
+      enum:
+        - HTML
+        - TEXT
+    email.Template.obj.template:
+      type: object
+      properties:
+        subjectTpl:
+          $ref: '#/components/schemas/email.Template.field.subjectTpl'
+        bodyTpl:
+          $ref: '#/components/schemas/email.Template.field.bodyTpl'
+    
+    email.Template.field.subjectTpl:
+      type: string
+      example: Email Subject
+    email.Template.field.bodyTpl:
+      type: string
+      example: Please refer to examples url
+    
+    email.Send.Request:
+      type: object
+      properties:
+        templateCode:
+          $ref: '#/components/schemas/email.Template.field.code'
+        from:
+          $ref: '#/components/schemas/email.send.obj.emailAddress'
+        to:
+          $ref: '#/components/schemas/email.send.obj.emailAddress'
+        cc:
+          $ref: '#/components/schemas/email.send.arr.emailAddress'
+        bcc:
+          $ref: '#/components/schemas/email.send.arr.emailAddress'
+        templateData:
+          type: object
+          description: >- 
+            Template Data (depend on email template)
+        processingType:
+          $ref: '#/components/schemas/email.send.field.processingType'
+    
+    email.send.arr.emailAddress:
+      type: array
+      items:
+        $ref: '#/components/schemas/email.send.obj.emailAddress'
+    
+    email.send.obj.emailAddress:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/email.send.field.email'
+        name:
+          $ref: '#/components/schemas/email.send.field.name'
+          
+    email.send.field.email:
+      type: string
+      format: email
+    email.send.field.name:
+      type: string
+    email.send.field.processingType:
+      type: string
+      enum:
+        - SYNC
+        - ASYNC
+      description: Processing Type [ SYNC (Synchronous) or ASYNC (Asyncrounous) ]
+    
+    # Covid19
+    covid19.Current.ByCountry.Request:
+      type: object
+      properties:
+        countryCode:
+          $ref: '#/components/schemas/geoLocation.field.country.code'
+        providers:
+          $ref: '#/components/schemas/covid19.arr.provider'
+    
+    covid19.arr.provider:
+      type: array
+      items:
+        $ref: '#/components/schemas/covid19.obj.provider'
+    covid19.obj.provider:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/covid19.provider.field.code'
+    covid19.provider.field.code:
+      type: string
+      example: _ALL_
