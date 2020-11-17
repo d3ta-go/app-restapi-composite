@@ -26,3 +26,5 @@ temp/
 .env
 d3ta-go
 project-template
+app-restapi
+app-restapi-composite
