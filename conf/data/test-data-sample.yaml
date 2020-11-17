@@ -34,6 +34,16 @@ test-data:
               username: test.d3tago.%s
             response:
               json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"email":"test.d3tago.36a3ab34-892c-4491-9f0a-c66c28106f29@gmail.com"}},"serverInfo":{"serverTime":"2020-11-17T06:41:46.020532+07:00"}}'
+  covid19:
+    covid19:
+      interface-layer:
+        features:
+          display-current-data-by-country:
+            request:
+              country-code: ID
+              provider-code: _ALL_
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"countryCode":"ID","providers":[{"code":"_ALL_"}]},"data":[{"provider":"covid19goid","information":"[Enable: true] Covid19 Indonesia Official Website [https://data.covid19.go.id] Only For ''ID''","data":{"countryInfo":{"code":"ID","name":"INDONESIA","ISO2Code":"ID","ISO3Code":"IDN","WHORegion":"SEARO"},"startDate":"2020-03-02T00:00:00.000Z","lastUpdate":"2020-11-16T00:00:00.000Z","today":{"death":85,"confirmed":3535,"cumulativeDeath":15296,"cumulativeConfirmed":470648},"yesterday":{"death":63,"confirmed":4106,"cumulativeDeath":15211,"cumulativeConfirmed":467113},"total":{"death":15296,"confirmed":470648,"regionCumulativeDeath":0,"regionCumulativeConfirmed":0}}},{"provider":"who","information":"[Enable: true] Covid19 WHO Official Website [https://covid19.who.int]","data":{"countryInfo":{"code":"ID","name":"INDONESIA","ISO2Code":"ID","ISO3Code":"IDN","WHORegion":"SEARO"},"startDate":"2020-01-03T00:00:00.000Z","lastUpdate":"2020-11-16T13:59:00.000Z","today":{"death":63,"confirmed":4106,"cumulativeDeath":15211,"cumulativeConfirmed":467113},"yesterday":{"death":111,"confirmed":5272,"cumulativeDeath":15148,"cumulativeConfirmed":463007},"total":{"death":15211,"confirmed":467113,"regionCumulativeDeath":1309489,"regionCumulativeConfirmed":33224050}}}]}},"serverInfo":{"serverTime":"2020-11-17T09:00:33.519824+07:00"}}'
   email:
     email:
       interface-layer:

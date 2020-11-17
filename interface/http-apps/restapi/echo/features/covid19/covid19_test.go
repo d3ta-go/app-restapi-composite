@@ -13,8 +13,16 @@ import (
 )
 
 func TestFCovid19_DisplayCurrentDataByCountry(t *testing.T) {
+	h := ht.NewHandler()
+
+	viper, err := h.GetViper("test-data")
+	if err != nil {
+		t.Errorf("GetViper: %s", err.Error())
+	}
+	testData := viper.GetStringMapString("test-data.covid19.covid19.interface-layer.features.display-current-data-by-country.request")
+
 	// variables
-	reqDTO := `{"countryCode":"ID", "providers": [{"code":"_ALL_"}]}`
+	reqDTO := `{"countryCode":"` + testData["country-code"] + `", "providers": [{"code":"` + testData["provider-code"] + `"}]}`
 	// resDTO := `{"status":"OK","response":{"message":"Operation succeeded","data":{"status":"OK","data":null}},"serverInfo":{"serverTime":"2020-07-18T11:26:35.377625+07:00"}}`
 
 	// Setup
@@ -56,6 +64,12 @@ func TestFCovid19_DisplayCurrentDataByCountry(t *testing.T) {
 	if assert.NoError(t, covid19.DisplayCurrentDataByCountry(c)) {
 		assert.Equal(t, http.StatusOK, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
+		// save to test-data
+		// save result for next test
+		viper.Set("test-data.covid19.covid19.interface-layer.features.display-current-data-by-country.response.json", res.Body.String())
+		if err := viper.WriteConfig(); err != nil {
+			t.Errorf("Error: viper.WriteConfig(), %s", err.Error())
+		}
 		t.Logf("RESPONSE.covid19.DisplayCurrentDataByCountry: %s", res.Body.String())
 	}
 }
