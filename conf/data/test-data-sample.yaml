@@ -110,3 +110,45 @@ test-data:
               et-tpl-subject: Subject Template Updated
             response:
               json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"code":"test.code.f995bf36-05b1-4e5e-b048-47d70c0950a6","version":"1.0.1"}},"serverInfo":{"serverTime":"2020-11-17T08:29:10.083825+07:00"}}'
+  geo-location:
+    country:
+      interface-layer:
+        features:
+          add:
+            request:
+              code: XX
+              iso2-code: XX
+              iso3-code: X3X
+              name: XX Country
+              who-region: WPRO
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"code":"XX","name":"XX Country","ISO2Code":"XX","ISO3Code":"X3X","WHORegion":"WPRO"},"data":{"ID":258,"code":"XX","name":"XX Country","ISO2Code":"XX","ISO3Code":"X3X","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-17T14:30:44.319194+07:00"}}'
+          delete:
+            request:
+              code: XX
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"code":"XX"},"data":{"ID":258,"code":"XX","name":"XX Country Updated","ISO2Code":"X2","ISO3Code":"X32","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-17T14:30:44.630756+07:00"}}'
+          get-detail:
+            request:
+              code: XX
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"code":"XX"},"data":{"ID":258,"code":"XX","name":"XX Country","ISO2Code":"XX","ISO3Code":"X3X","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-17T14:30:44.356933+07:00"}}'
+          refresh-indexer:
+            request:
+              processing-type: SYNC
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"status":"OK","processType":"SYNC"}},"serverInfo":{"serverTime":"2020-11-17T14:30:44.155288+07:00"}}'
+          search-indexer:
+            request:
+              name: IND
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"name":"IND"},"data":[{"ID":95,"code":"IN","name":"INDIA","ISO2Code":"IN","ISO3Code":"IND","WHORegion":"SEARO"},{"ID":93,"code":"ID","name":"INDONESIA UPDATED","ISO2Code":"ID","ISO3Code":"IDN","WHORegion":"SEARO"}]}},"serverInfo":{"serverTime":"2020-11-17T14:30:44.241656+07:00"}}'
+          update:
+            request:
+              code: XX
+              iso2-code: X2
+              iso3-code: X32
+              name: XX Country Updated
+              who-region: WPRO
+            response:
+              json: '{"status":"OK","response":{"message":"Operation succeeded","result":{"query":{"keys":{"code":"XX"},"data":{"name":"XX Country Updated","ISO2Code":"X2","ISO3Code":"X32","WHORegion":"WPRO"}},"data":{"ID":258,"code":"XX","name":"XX Country Updated","ISO2Code":"X2","ISO3Code":"X32","WHORegion":"WPRO"}}},"serverInfo":{"serverTime":"2020-11-17T14:30:44.504651+07:00"}}'

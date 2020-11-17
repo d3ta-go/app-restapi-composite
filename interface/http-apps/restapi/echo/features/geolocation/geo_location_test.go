@@ -13,6 +13,8 @@ import (
 )
 
 func TestFGeoLocation_ListAllCountry(t *testing.T) {
+	// handler
+	h := ht.NewHandler()
 
 	// Setup
 	e := echo.New()
@@ -23,15 +25,17 @@ func TestFGeoLocation_ListAllCountry(t *testing.T) {
 
 	c := e.NewContext(req, res)
 
-	// handler
-	handler := ht.NewHandler()
-	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
+		return
+	}
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
+		t.Errorf("initialize.OpenAllIndexerConnection: %s", err.Error())
 		return
 	}
 
 	// set identity (test only)
-	token, claims, err := ht.GenerateUserTestToken(handler, t)
+	token, claims, err := ht.GenerateUserTestToken(h, t)
 	if err != nil {
 		t.Errorf("generateUserTestToken: %s", err.Error())
 		return
@@ -40,7 +44,7 @@ func TestFGeoLocation_ListAllCountry(t *testing.T) {
 	c.Set("identity.token.jwt.claims", claims)
 
 	// test feature
-	geoLoc, err := NewFGeoLocation(handler)
+	geoLoc, err := NewFGeoLocation(h)
 	if err != nil {
 		panic(err)
 	}
@@ -54,9 +58,18 @@ func TestFGeoLocation_ListAllCountry(t *testing.T) {
 }
 
 func TestFGeoLocation_RefreshCountryIndexer(t *testing.T) {
+	// handler
+	h := ht.NewHandler()
+
+	viper, err := h.GetViper("test-data")
+	if err != nil {
+		t.Errorf("GetViper: %s", err.Error())
+	}
+	testData := viper.GetStringMapString("test-data.geo-location.country.interface-layer.features.refresh-indexer.request")
+
 	// variables
 	reqDTO := `{
-		"processType":"SYNC"
+		"processType":"` + testData["processing-type"] + `"
 	}`
 
 	// Setup
@@ -68,19 +81,17 @@ func TestFGeoLocation_RefreshCountryIndexer(t *testing.T) {
 
 	c := e.NewContext(req, res)
 
-	// handler
-	handler := ht.NewHandler()
-	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
-	if err := initialize.OpenAllIndexerConnection(handler); err != nil {
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
 		t.Errorf("initialize.OpenAllIndexerConnection: %s", err.Error())
 		return
 	}
 
 	// set identity (test only)
-	token, claims, err := ht.GenerateUserTestToken(handler, t)
+	token, claims, err := ht.GenerateUserTestToken(h, t)
 	if err != nil {
 		t.Errorf("generateUserTestToken: %s", err.Error())
 		return
@@ -89,7 +100,7 @@ func TestFGeoLocation_RefreshCountryIndexer(t *testing.T) {
 	c.Set("identity.token.jwt.claims", claims)
 
 	// test feature
-	geoLoc, err := NewFGeoLocation(handler)
+	geoLoc, err := NewFGeoLocation(h)
 	if err != nil {
 		panic(err)
 	}
@@ -98,14 +109,29 @@ func TestFGeoLocation_RefreshCountryIndexer(t *testing.T) {
 	if assert.NoError(t, geoLoc.RefreshCountryIndexer(c)) {
 		assert.Equal(t, http.StatusCreated, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
+		// save to test-data
+		// save result for next test
+		viper.Set("test-data.geo-location.country.interface-layer.features.refresh-indexer.response.json", res.Body.String())
+		if err := viper.WriteConfig(); err != nil {
+			t.Errorf("Error: viper.WriteConfig(), %s", err.Error())
+		}
 		t.Logf("RESPONSE.geoLoc.RefreshCountryIndexer: %s", res.Body.String())
 	}
 }
 
 func TestFGeoLocation_SearchCountryIndexer(t *testing.T) {
+	// handler
+	h := ht.NewHandler()
+
+	viper, err := h.GetViper("test-data")
+	if err != nil {
+		t.Errorf("GetViper: %s", err.Error())
+	}
+	testData := viper.GetStringMapString("test-data.geo-location.country.interface-layer.features.search-indexer.request")
+
 	// variables
 	reqDTO := `{
-		"name":"IND"
+		"name":"` + testData["name"] + `"
 	}`
 
 	// Setup
@@ -117,19 +143,17 @@ func TestFGeoLocation_SearchCountryIndexer(t *testing.T) {
 
 	c := e.NewContext(req, res)
 
-	// handler
-	handler := ht.NewHandler()
-	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
-	if err := initialize.OpenAllIndexerConnection(handler); err != nil {
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
 		t.Errorf("initialize.OpenAllIndexerConnection: %s", err.Error())
 		return
 	}
 
 	// set identity (test only)
-	token, claims, err := ht.GenerateUserTestToken(handler, t)
+	token, claims, err := ht.GenerateUserTestToken(h, t)
 	if err != nil {
 		t.Errorf("generateUserTestToken: %s", err.Error())
 		return
@@ -138,7 +162,7 @@ func TestFGeoLocation_SearchCountryIndexer(t *testing.T) {
 	c.Set("identity.token.jwt.claims", claims)
 
 	// test feature
-	geoLoc, err := NewFGeoLocation(handler)
+	geoLoc, err := NewFGeoLocation(h)
 	if err != nil {
 		panic(err)
 	}
@@ -147,18 +171,33 @@ func TestFGeoLocation_SearchCountryIndexer(t *testing.T) {
 	if assert.NoError(t, geoLoc.SearchCountryIndexer(c)) {
 		assert.Equal(t, http.StatusCreated, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
+		// save to test-data
+		// save result for next test
+		viper.Set("test-data.geo-location.country.interface-layer.features.search-indexer.response.json", res.Body.String())
+		if err := viper.WriteConfig(); err != nil {
+			t.Errorf("Error: viper.WriteConfig(), %s", err.Error())
+		}
 		t.Logf("RESPONSE.geoLoc.SearchCountryIndexer: %s", res.Body.String())
 	}
 }
 
 func TestFGeoLocation_AddCountry(t *testing.T) {
+	// handler
+	h := ht.NewHandler()
+
+	viper, err := h.GetViper("test-data")
+	if err != nil {
+		t.Errorf("GetViper: %s", err.Error())
+	}
+	testData := viper.GetStringMapString("test-data.geo-location.country.interface-layer.features.add.request")
+
 	// variables
 	reqDTO := `{
-		"code":"XX", 
-		"name": "XX COUNTRY", 
-		"ISO2Code": "XX", 
-		"ISO3Code": "", 
-		"WHORegion": "WPRO"
+		"code":"` + testData["code"] + `", 
+		"name": "` + testData["name"] + `", 
+		"ISO2Code": "` + testData["iso2-code"] + `", 
+		"ISO3Code": "` + testData["iso3-code"] + `", 
+		"WHORegion": "` + testData["who-region"] + `"
 	}`
 
 	// Setup
@@ -170,15 +209,17 @@ func TestFGeoLocation_AddCountry(t *testing.T) {
 
 	c := e.NewContext(req, res)
 
-	// handler
-	handler := ht.NewHandler()
-	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
+		return
+	}
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
+		t.Errorf("initialize.OpenAllIndexerConnection: %s", err.Error())
 		return
 	}
 
 	// set identity (test only)
-	token, claims, err := ht.GenerateUserTestToken(handler, t)
+	token, claims, err := ht.GenerateUserTestToken(h, t)
 	if err != nil {
 		t.Errorf("generateUserTestToken: %s", err.Error())
 		return
@@ -187,7 +228,7 @@ func TestFGeoLocation_AddCountry(t *testing.T) {
 	c.Set("identity.token.jwt.claims", claims)
 
 	// test feature
-	geoLoc, err := NewFGeoLocation(handler)
+	geoLoc, err := NewFGeoLocation(h)
 	if err != nil {
 		panic(err)
 	}
@@ -196,11 +237,25 @@ func TestFGeoLocation_AddCountry(t *testing.T) {
 	if assert.NoError(t, geoLoc.AddCountry(c)) {
 		assert.Equal(t, http.StatusCreated, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
+		// save to test-data
+		// save result for next test
+		viper.Set("test-data.geo-location.country.interface-layer.features.add.response.json", res.Body.String())
+		if err := viper.WriteConfig(); err != nil {
+			t.Errorf("Error: viper.WriteConfig(), %s", err.Error())
+		}
 		t.Logf("RESPONSE.geoLoc.AddCountry: %s", res.Body.String())
 	}
 }
 
 func TestFGeoLocation_GetCountry(t *testing.T) {
+	// handler
+	h := ht.NewHandler()
+
+	viper, err := h.GetViper("test-data")
+	if err != nil {
+		t.Errorf("GetViper: %s", err.Error())
+	}
+	testData := viper.GetStringMapString("test-data.geo-location.country.interface-layer.features.get-detail.request")
 
 	// Setup
 	e := echo.New()
@@ -212,17 +267,19 @@ func TestFGeoLocation_GetCountry(t *testing.T) {
 	c := e.NewContext(req, res)
 	// c.SetPath("/api/v1/geolocation/country/:code")
 	c.SetParamNames("code")
-	c.SetParamValues("XX")
+	c.SetParamValues(testData["code"])
 
-	// handler
-	handler := ht.NewHandler()
-	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
+		return
+	}
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
+		t.Errorf("initialize.OpenAllIndexerConnection: %s", err.Error())
 		return
 	}
 
 	// set identity (test only)
-	token, claims, err := ht.GenerateUserTestToken(handler, t)
+	token, claims, err := ht.GenerateUserTestToken(h, t)
 	if err != nil {
 		t.Errorf("generateUserTestToken: %s", err.Error())
 		return
@@ -231,8 +288,7 @@ func TestFGeoLocation_GetCountry(t *testing.T) {
 	c.Set("identity.token.jwt.claims", claims)
 
 	// test feature
-
-	geoLoc, err := NewFGeoLocation(handler)
+	geoLoc, err := NewFGeoLocation(h)
 	if err != nil {
 		panic(err)
 	}
@@ -241,17 +297,32 @@ func TestFGeoLocation_GetCountry(t *testing.T) {
 	if assert.NoError(t, geoLoc.GetCountry(c)) {
 		assert.Equal(t, http.StatusOK, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
+		// save to test-data
+		// save result for next test
+		viper.Set("test-data.geo-location.country.interface-layer.features.get-detail.response.json", res.Body.String())
+		if err := viper.WriteConfig(); err != nil {
+			t.Errorf("Error: viper.WriteConfig(), %s", err.Error())
+		}
 		t.Logf("RESPONSE.geoLoc.GetCountry: %s", res.Body.String())
 	}
 }
 
 func TestFGeoLocation_UpdateCountry(t *testing.T) {
+	// handler
+	h := ht.NewHandler()
+
+	viper, err := h.GetViper("test-data")
+	if err != nil {
+		t.Errorf("GetViper: %s", err.Error())
+	}
+	testData := viper.GetStringMapString("test-data.geo-location.country.interface-layer.features.update.request")
+
 	// variables
 	reqDTO := `{
-		"name": "XX COUNTRY UPDATED",
-		"ISO2Code": "XX",
-		"ISO3Code": "",
-		"WHORegion": "WPRO"
+		"name": "` + testData["name"] + `",
+		"ISO2Code": "` + testData["iso2-code"] + `",
+		"ISO3Code": "` + testData["iso3-code"] + `",
+		"WHORegion": "` + testData["who-region"] + `"
 	}`
 
 	// Setup
@@ -264,17 +335,19 @@ func TestFGeoLocation_UpdateCountry(t *testing.T) {
 	c := e.NewContext(req, res)
 	// c.SetPath("/api/v1/geolocation/country/:code")
 	c.SetParamNames("code")
-	c.SetParamValues("XX")
+	c.SetParamValues(testData["code"])
 
-	// handler
-	handler := ht.NewHandler()
-	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
+		return
+	}
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
+		t.Errorf("initialize.OpenAllIndexerConnection: %s", err.Error())
 		return
 	}
 
 	// set identity (test only)
-	token, claims, err := ht.GenerateUserTestToken(handler, t)
+	token, claims, err := ht.GenerateUserTestToken(h, t)
 	if err != nil {
 		t.Errorf("generateUserTestToken: %s", err.Error())
 		return
@@ -283,7 +356,7 @@ func TestFGeoLocation_UpdateCountry(t *testing.T) {
 	c.Set("identity.token.jwt.claims", claims)
 
 	// test feature
-	geoLoc, err := NewFGeoLocation(handler)
+	geoLoc, err := NewFGeoLocation(h)
 	if err != nil {
 		panic(err)
 	}
@@ -292,11 +365,26 @@ func TestFGeoLocation_UpdateCountry(t *testing.T) {
 	if assert.NoError(t, geoLoc.UpdateCountry(c)) {
 		assert.Equal(t, http.StatusOK, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
+		// save to test-data
+		// save result for next test
+		viper.Set("test-data.geo-location.country.interface-layer.features.update.response.json", res.Body.String())
+		if err := viper.WriteConfig(); err != nil {
+			t.Errorf("Error: viper.WriteConfig(), %s", err.Error())
+		}
 		t.Logf("RESPONSE.geoLoc.UpdateCountry: %s", res.Body.String())
 	}
 }
 
 func TestFGeoLocation_DeleteCountry(t *testing.T) {
+	// handler
+	h := ht.NewHandler()
+
+	viper, err := h.GetViper("test-data")
+	if err != nil {
+		t.Errorf("GetViper: %s", err.Error())
+	}
+	testData := viper.GetStringMapString("test-data.geo-location.country.interface-layer.features.delete.request")
+
 	// Setup
 	e := echo.New()
 
@@ -307,17 +395,19 @@ func TestFGeoLocation_DeleteCountry(t *testing.T) {
 	c := e.NewContext(req, res)
 	// c.SetPath("/api/v1/geolocation/country/:code")
 	c.SetParamNames("code")
-	c.SetParamValues("XX")
+	c.SetParamValues(testData["code"])
 
-	// handler
-	handler := ht.NewHandler()
-	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
+		return
+	}
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
+		t.Errorf("initialize.OpenAllIndexerConnection: %s", err.Error())
 		return
 	}
 
 	// set identity (test only)
-	token, claims, err := ht.GenerateUserTestToken(handler, t)
+	token, claims, err := ht.GenerateUserTestToken(h, t)
 	if err != nil {
 		t.Errorf("generateUserTestToken: %s", err.Error())
 		return
@@ -326,7 +416,7 @@ func TestFGeoLocation_DeleteCountry(t *testing.T) {
 	c.Set("identity.token.jwt.claims", claims)
 
 	// test feature
-	geoLoc, err := NewFGeoLocation(handler)
+	geoLoc, err := NewFGeoLocation(h)
 	if err != nil {
 		panic(err)
 	}
@@ -335,6 +425,12 @@ func TestFGeoLocation_DeleteCountry(t *testing.T) {
 	if assert.NoError(t, geoLoc.DeleteCountry(c)) {
 		assert.Equal(t, http.StatusOK, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
+		// save to test-data
+		// save result for next test
+		viper.Set("test-data.geo-location.country.interface-layer.features.delete.response.json", res.Body.String())
+		if err := viper.WriteConfig(); err != nil {
+			t.Errorf("Error: viper.WriteConfig(), %s", err.Error())
+		}
 		t.Logf("RESPONSE.geoLoc.DeleteCountry: %s", res.Body.String())
 	}
 }

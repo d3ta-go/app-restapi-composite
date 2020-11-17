@@ -3,12 +3,12 @@ package geolocation
 import (
 	"net/http"
 
+	appGeoLoc "github.com/d3ta-go/ddd-mod-geolocation/modules/geolocation/application"
+	appGeoLocDTOCountry "github.com/d3ta-go/ddd-mod-geolocation/modules/geolocation/application/dto/country"
 	"github.com/d3ta-go/system/interface/http-apps/restapi/echo/features"
 	"github.com/d3ta-go/system/interface/http-apps/restapi/echo/response"
 	"github.com/d3ta-go/system/system/handler"
 	"github.com/labstack/echo/v4"
-	appGeoLoc "github.com/d3ta-go/ddd-mod-geolocation/modules/geolocation/application"
-	appGeoLocDTOCountry "github.com/d3ta-go/ddd-mod-geolocation/modules/geolocation/application/dto/country"
 )
 
 // NewFGeoLocation new FGeoLocation
