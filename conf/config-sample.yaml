@@ -8,9 +8,9 @@ environment:
 applications:
   servers:
     restapi:
-      name: "DDD Technical Architecture Patterns:: REST API"
+      name: "Modular DDD Technical Architecture Patterns:: Composite REST API"
       version: "0.1.0"
-      description: "Domain-Driven Design Technical Architecture Patterns:: Golang Sample"
+      description: "Modular Domain-Driven Design Technical Architecture Patterns:: Golang Sample"
       options:
         showEngineHeader: true
         displayOpenAPI: true
@@ -21,8 +21,8 @@ applications:
             enable: true
         openAPIDefinition: # OpenAPIDefinition
           info:
-            title: "DDD Technical Architecture Patterns: REST API"
-            description: "A Simple Implementation of `Domain-Driven Design Technical Architecture Patterns` in Golang"
+            title: "Modular DDD Technical Architecture Patterns: Composite REST API"
+            description: "A Simple Implementation of `Modular Domain-Driven Design Technical Architecture Patterns` in Golang"
             termsOfService: https://github.com/d3ta-go
             contact:
               name: Muhammad Hari
