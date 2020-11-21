@@ -1,4 +1,5 @@
-# app-restapi-composite
+# app-restapi-composite ( [![Go Report Card](https://goreportcard.com/badge/github.com/d3ta-go/app-restapi-composite)](https://goreportcard.com/report/github.com/d3ta-go/app-restapi-composite) )
+
 
 Interface/Presentation Layer: RESTAPI Composite Application Interface
 
