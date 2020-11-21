@@ -1,4 +1,4 @@
-# Modular DDD Technical Architecture Patterns: Golang [app-restapi-composite]
+# app-restapi-composite
 
 Interface/Presentation Layer: RESTAPI Composite Application Interface
 
@@ -6,7 +6,7 @@ A part of `Simple Implementation of Modular DDD Technical Architecture Patterns 
 
 ## Diagram v 0.2.2-Modular
 
-![DDD-Technical-Architecture-Patterns-Golang-0.2.2](docs/img/DDD-Technical-Architecture-Patterns-Golang-0.2.2-Modular.png)
+![DDD-Technical-Architecture-Patterns-Golang-0.2.2: Modular](docs/img/DDD-Technical-Architecture-Patterns-Golang-0.2.2-Modular.png)
 
 ## Components
 
@@ -102,3 +102,41 @@ $ cd dist/[OS-arch]/
 $ ./app-restapi db migrate
 $ ./app-restapi server restapi
 ```
+
+**RESTAPI (console):**
+
+![Composite REST API](docs/img/composite-sample-app-rest-api.png)
+
+**Swagger UI (openapis docs):**
+
+URL: http://localhost:2020/openapis/docs/index.html
+
+![Openapis: Composite REST AIP](docs/img/composite-sample-openapis-docs.png)
+
+**Related Domain/Repositories:**
+
+1. DDD Module: Account (Generic Subdomain) - [d3ta-go/ddd-mod-account](https://github.com/d3ta-go/ddd-mod-account)
+2. DDD Module: Email (Generic Subdomain) - [d3ta-go/ddd-mod-email](https://github.com/d3ta-go/ddd-mod-email)
+3. DDD Module: GeoLocation (Supporting Subdomain) - [d3ta-go/ddd-mod-geolocation](https://github.com/d3ta-go/ddd-mod-geolocation)
+4. DDD Module: Covid19 (Core Subdomain) - [d3ta-go/ddd-mod-covid19](https://github.com/d3ta-go/ddd-mod-covid19)
+5. Common System Libraries - [d3ta-go/system](https://github.com/d3ta-go/system)
+
+**Online Demo:\***
+
+> Due the limitation of our server spec (for ELK: Elasticsearch/Kibana). We cannot provide the online demo for this repo. Very sorry for the inconvenience.
+
+Available Online Demo:
+
+1. Account REST API Microservice - [d3ta-go/ms-account-restapi](https://github.com/d3ta-go/ms-account-restapi)
+2. Email REST API Microservice - [d3ta-go/ms-email-restapi](https://github.com/d3ta-go/ms-email-restapi)
+3. Covid19 REST API Microservice - [d3ta-go/ms-covid19-restapi](https://github.com/d3ta-go/ms-covid19-restapi)
+
+**References:**
+
+1. [Book] Domain-Driven Design: Tackling Complexity in the Heart of Software 1st Edition (Eric Evans, 2004)
+
+2. [Book] Patterns, Principles, and Practices of Domain-Driven Design (Scott Millett & Nick Tune, 2015)
+
+**Team & Maintainer:**
+
+1. Muhammad Hari (https://www.linkedin.com/in/muharihar/)
