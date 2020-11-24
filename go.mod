@@ -7,7 +7,7 @@ require (
 	github.com/d3ta-go/ddd-mod-covid19 v0.0.3
 	github.com/d3ta-go/ddd-mod-email v0.0.4
 	github.com/d3ta-go/ddd-mod-geolocation v0.0.3
-	github.com/d3ta-go/system v0.0.12
+	github.com/d3ta-go/system v0.0.13
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
