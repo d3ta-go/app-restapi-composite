@@ -1,6 +1,5 @@
 # app-restapi-composite ( [![Go Report Card](https://goreportcard.com/badge/github.com/d3ta-go/app-restapi-composite)](https://goreportcard.com/report/github.com/d3ta-go/app-restapi-composite) )
 
-
 Interface/Presentation Layer: RESTAPI Composite Application Interface
 
 A part of `Simple Implementation of Modular DDD Technical Architecture Patterns in Go`.
@@ -88,17 +87,18 @@ $ ./app-restapi-composite server restapi
 
 5. Distribution (binary)
 
-Binary distribution (OS-arch):
+Binary distribution (OS/arch):
 
-- darwin-amd64
-- linux-amd64
-- linux-386
-- windows-amd64
-- windows-386
+- darwin/amd64
+- linux/amd64
+- linux/386
+- windows/amd64
+- windows/386
 
 ```shell
 $ cd app-restapi-composite
 $ sh build.dist.sh
+$ platform: [choose from OS/arch list, for example: darwin/amd64]
 $ cd dist/[OS-arch]/
 $ ./app-restapi db migrate
 $ ./app-restapi server restapi
