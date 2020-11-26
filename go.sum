@@ -85,6 +85,8 @@ github.com/d3ta-go/ddd-mod-email v0.0.3 h1:4Zp0JcOHI43f2XtZ/yUXIAoh99C5f4pQ+fVUt
 github.com/d3ta-go/ddd-mod-email v0.0.3/go.mod h1:LGq6QvmRT93VPxB5XP6+rqJTG6Y4jNZmGY4FRX6s+e0=
 github.com/d3ta-go/ddd-mod-email v0.0.4 h1:pHWCsCbDkb+YSEXeZPY/ZyGIR9ax8f6lWbxmk5vJwDg=
 github.com/d3ta-go/ddd-mod-email v0.0.4/go.mod h1:I5xGHZJbjCG+utcvq1g4US0HOOFIcJNjfS4c1Tc3AHI=
+github.com/d3ta-go/ddd-mod-email v0.0.5 h1:d8b4ZUQZrbh10XBIYxsUEXBzoxfGLn71EvgT7dXGWw0=
+github.com/d3ta-go/ddd-mod-email v0.0.5/go.mod h1:I5xGHZJbjCG+utcvq1g4US0HOOFIcJNjfS4c1Tc3AHI=
 github.com/d3ta-go/ddd-mod-geolocation v0.0.1 h1:f2/XmLuTVCVlpv1RPRKB9bBFIbik0Ej4yTKHSOTRuxY=
 github.com/d3ta-go/ddd-mod-geolocation v0.0.1/go.mod h1:x+JZYrdr3mfj8VSyGKzQoZjk9CriRHHj2fEkJ0Ke2Sg=
 github.com/d3ta-go/ddd-mod-geolocation v0.0.2 h1:ZmjwAAWTzr2he0Etyp0Va0wYh6scPOEYTbJvc2HBqnw=

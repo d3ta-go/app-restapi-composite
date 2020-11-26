@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/d3ta-go/ddd-mod-account v0.0.3
 	github.com/d3ta-go/ddd-mod-covid19 v0.0.3
-	github.com/d3ta-go/ddd-mod-email v0.0.4
+	github.com/d3ta-go/ddd-mod-email v0.0.5
 	github.com/d3ta-go/ddd-mod-geolocation v0.0.3
 	github.com/d3ta-go/system v0.0.13
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
