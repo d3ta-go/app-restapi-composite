@@ -132,6 +132,8 @@ Available Online Demo:
 2. Email REST API Microservice - [d3ta-go/ms-email-restapi](https://github.com/d3ta-go/ms-email-restapi)
 3. Covid19 REST API Microservice - [d3ta-go/ms-covid19-restapi](https://github.com/d3ta-go/ms-covid19-restapi)
 
+4. Email GraphQL API Microservice - [d3ta-go/ms-email-graphql-api](https://github.com/d3ta-go/ms-email-graphql-api)
+
 **References:**
 
 1. [Book] Domain-Driven Design: Tackling Complexity in the Heart of Software 1st Edition (Eric Evans, 2004)
